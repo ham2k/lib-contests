@@ -32,6 +32,9 @@ class CQWWContestInfo extends BaseContestInfo {
   get exchange() {
     return ["cqZone"]
   }
+  get baseOptions() {
+    return { useWAEEntities: true }
+  }
 
   scoringInfoForQSO(qso) {
     const info = { unique: {}, score: {} }
@@ -59,10 +62,10 @@ class CQWWContestInfo extends BaseContestInfo {
     // * Country: A multiplier of one (1) for each different country contacted on each band.
     // The DXCC entity list, Worked All Europe (WAE) multiplier list plus IG9/IH9, and continental boundaries
     // are the standards for defining country multipliers. Maritime mobile stations count only for a zone multiplier.
-    info.unique.entities = `${qso.their.entityPrefix}`
+    info.unique.entities = `${qso.their.entityPrefix}-${qso.band}`
     info.score.entities = 1
 
-    info.unique.zones = `${qso.their.sent?.cqZone || qso.their.cqZone}`
+    info.unique.zones = `${qso.their.sent?.cqZone || qso.their.cqZone}-${qso.band}`
     info.score.zones = 1
 
     return info

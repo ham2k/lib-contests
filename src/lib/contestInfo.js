@@ -6,11 +6,13 @@ const { annotateFromCountryFile } = require("@ham2k/data/country-file")
 
 class BaseContestInfo {
   constructor(id, options) {
-    this.options = options || {}
+    this.options = { ...this.baseOptions, ...options }
     this.options.category = this.options.category || {}
     this.options.near = this.options.near || new Date().toISOString()
-
     this.options.id = id
+
+    this.countryFileOptions = { wae: this.options.useWAEEntities }
+
     autoBind(this)
   }
 
@@ -50,6 +52,9 @@ class BaseContestInfo {
   get minimumBreakInMinutes() {
     throw "Not implemented"
   }
+  get baseOptions() {
+    return {}
+  }
   get bands() {
     throw "Not implemented"
   }
@@ -83,17 +88,15 @@ class BaseContestInfo {
     if (!this.scoringScratchpad?.our?.prefix) {
       this.scoringScratchpad.our = { ...qso.our }
       parseCallsign(this.scoringScratchpad.our.call, this.scoringScratchpad.our)
-      annotateFromCountryFile(this.scoringScratchpad.our)
+      annotateFromCountryFile(this.scoringScratchpad.our, this.countryFileOptions)
     }
 
     if (!qso.our?.prefix) {
       qso.our = { ...qso.our, ...this.scoringScratchpad.our }
     }
 
-    if (!qso.their?.prefix) {
-      parseCallsign(qso.their.call, qso.their)
-      annotateFromCountryFile(qso.their)
-    }
+    parseCallsign(qso.their.call, qso.their)
+    annotateFromCountryFile(qso.their, this.countryFileOptions)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
