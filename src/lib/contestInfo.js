@@ -73,6 +73,8 @@ class BaseContestInfo {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   score(qson, options = {}) {
     this.resetScoring()
+    this.scoringScratchpad.isFrozen = Object.isFrozen(qson)
+
     qson.qsos.forEach((qso) => {
       this.processOneQSO(qso)
     })
@@ -85,18 +87,18 @@ class BaseContestInfo {
   }
 
   prepareOneQSO(qso) {
-    if (!this.scoringScratchpad?.our?.prefix) {
-      this.scoringScratchpad.our = { ...qso.our }
-      parseCallsign(this.scoringScratchpad.our.call, this.scoringScratchpad.our)
-      annotateFromCountryFile(this.scoringScratchpad.our, this.countryFileOptions)
-    }
+    if (!qso?.our?.prefix) {
+      if (!this.scoringScratchpad?.our?.prefix) {
+        this.scoringScratchpad.our = { ...qso.our }
+        parseCallsign(this.scoringScratchpad.our.call, this.scoringScratchpad.our)
+        annotateFromCountryFile(this.scoringScratchpad.our, this.countryFileOptions)
+      }
 
-    if (!qso.our?.prefix) {
       qso.our = { ...qso.our, ...this.scoringScratchpad.our }
     }
 
-    parseCallsign(qso.their.call, qso.their)
-    annotateFromCountryFile(qso.their, this.countryFileOptions)
+    if (!qso?.their?.prefix) parseCallsign(qso.their.call, qso.their)
+    if (!qso?.their?.entityPrefix) annotateFromCountryFile(qso.their, this.countryFileOptions)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -108,7 +110,7 @@ class BaseContestInfo {
   }
 
   processOneQSO(qso) {
-    this.prepareOneQSO(qso)
+    if (!this.scoringScratchpad.isFrozen) this.prepareOneQSO(qso)
 
     let score, unique
     if (qso?.their?.baseCall) {
