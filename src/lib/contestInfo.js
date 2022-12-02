@@ -7,8 +7,8 @@ const { annotateFromCountryFile } = require("@ham2k/data/country-file")
 class BaseContestInfo {
   constructor(id, options) {
     this.options = { ...this.baseOptions, ...options }
-    this.options.category = this.options.category || {}
-    this.options.near = this.options.near || new Date().toISOString()
+    this.options.category = this.options.category ?? {}
+    this.options.near = this.options.near ?? new Date().toISOString()
     this.options.id = id
 
     this.countryFileOptions = { wae: this.options.useWAEEntities }
@@ -133,11 +133,11 @@ class BaseContestInfo {
             if (unique[key]) {
               if (!this.scoring.uniqueIndex[unique[key]]) {
                 this.scoring.uniqueIndex[unique[key]] = true
-                this.scoring.score[key] = (this.scoring.score[key] || 0) + score[key]
+                this.scoring.score[key] = (this.scoring.score[key] ?? 0) + score[key]
                 this.addToSummary(qso, key, score[key])
               }
             } else {
-              this.scoring.score[key] = (this.scoring.score[key] || 0) + score[key]
+              this.scoring.score[key] = (this.scoring.score[key] ?? 0) + score[key]
               this.addToSummary(qso, key, score[key])
             }
           })
@@ -156,54 +156,54 @@ class BaseContestInfo {
   }
 
   addToSummary(qso, key, add) {
-    this.scoring.summary[key] = this.scoring.summary[key] || {}
-    this.scoring.summary[key].all = (this.scoring.summary[key].all || 0) + add
-    this.scoring.summary[key][`${qso.band}`] = (this.scoring.summary[key][`${qso.band}`] || 0) + add
-    this.scoring.summary[key][`${qso.mode}`] = (this.scoring.summary[key][`${qso.mode}`] || 0) + add
+    this.scoring.summary[key] = this.scoring.summary[key] ?? {}
+    this.scoring.summary[key].all = (this.scoring.summary[key].all ?? 0) + add
+    this.scoring.summary[key][`${qso.band}`] = (this.scoring.summary[key][`${qso.band}`] ?? 0) + add
+    this.scoring.summary[key][`${qso.mode}`] = (this.scoring.summary[key][`${qso.mode}`] ?? 0) + add
     this.scoring.summary[key][`${qso.band}-${qso.mode}`] =
-      (this.scoring.summary[key][`${qso.band}-${qso.mode}`] || 0) + add
+      (this.scoring.summary[key][`${qso.band}-${qso.mode}`] ?? 0) + add
   }
 }
 
 class GenericContestInfo extends BaseContestInfo {
   get sponsor() {
-    return this.options.sponsor || ""
+    return this.options.sponsor ?? ""
   }
   get longSponsor() {
-    return this.options.longSponsor || this.sponsor
+    return this.options.longSponsor ?? this.sponsor
   }
   get homeUrl() {
     return this.options.homeUrl
   }
   get name() {
-    return this.options.name || `${this.id}`
+    return this.options.name ?? `${this.id}`
   }
   get longName() {
-    return this.options.longName || `${this.id} (Generic)`
+    return this.options.longName ?? `${this.id} (Generic)`
   }
   get id() {
-    return this.options.id || "CONTEST"
+    return this.options.id ?? "CONTEST"
   }
   get bands() {
-    return this.options.bands || CONTEST_BANDS
+    return this.options.bands ?? CONTEST_BANDS
   }
   get modes() {
-    return this.options.modes || [MODES.Mixed]
+    return this.options.modes ?? [MODES.Mixed]
   }
   get periods() {
-    return this.options.periods || []
+    return this.options.periods ?? []
   }
   get maximumOperationInMinutes() {
-    return this.options.maximumOperationInMinutes || 48 * 60
+    return this.options.maximumOperationInMinutes ?? 48 * 60
   }
   get minimumBreakInMinutes() {
-    return this.options.minimumBreakInMinutes || 0
+    return this.options.minimumBreakInMinutes ?? 0
   }
   get multipliers() {
-    return this.options.multipliers || []
+    return this.options.multipliers ?? []
   }
   get exchange() {
-    return this.options.exchange || ["exchange"]
+    return this.options.exchange ?? ["exchange"]
   }
 
   scoringInfoForQSO(qso) {

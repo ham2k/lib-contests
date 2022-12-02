@@ -120,7 +120,7 @@ class NYQPContestInfo extends BaseContestInfo {
     const ourCounty = COUNTY_DATA[qso.our.sent.location] && qso.our.sent.location
     const theirCounty = COUNTY_DATA[qso.their.sent.location] && qso.their.sent.location
 
-    info.unique.qso = `${qso.their.call}-${qso.band}-${qso.mode}-${ourCounty || "_"}-${theirCounty || "_"}`
+    info.unique.qso = `${qso.their.call}-${qso.band}-${qso.mode}-${ourCounty ?? "_"}-${theirCounty ?? "_"}`
 
     if (ourCounty || theirCounty) {
       // if (qso.mode !== "SSB") debugger

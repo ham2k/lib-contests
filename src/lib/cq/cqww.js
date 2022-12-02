@@ -65,7 +65,7 @@ class CQWWContestInfo extends BaseContestInfo {
     info.unique.entities = `${qso.their.entityPrefix}-${qso.band}`
     info.score.entities = 1
 
-    info.unique.zones = `${qso.their.sent?.cqZone || qso.their.cqZone}-${qso.band}`
+    info.unique.zones = `${qso.their.sent?.cqZone ?? qso.their.cqZone}-${qso.band}`
     info.score.zones = 1
 
     return info

@@ -71,7 +71,7 @@ class CQWPXContestInfo extends BaseContestInfo {
 
     // V-C. Prefix Multipliers: The prefix multiplier is the number of valid prefixes worked.
     // Each PREFIX is counted only once regardless of the band or number of times the same prefix is worked.
-    info.unique.prefixes = qso.their.extendedPrefix || qso.their.prefix
+    info.unique.prefixes = qso.their.extendedPrefix ?? qso.their.prefix
     info.score.prefixes = 1
 
     return info
