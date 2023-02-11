@@ -1,5 +1,5 @@
 const { findContestInfoForId } = require("./contests")
-const { useBuiltinCountryFile } = require("@ham2k/data/country-file/builtinData")
+const { useBuiltinCountryFile } = require("@ham2k/data-country-file/builtinData")
 
 useBuiltinCountryFile()
 

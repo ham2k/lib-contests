@@ -1,8 +1,8 @@
 const { default: autoBind } = require("auto-bind")
 const { MODES } = require("./consts")
-const { CONTEST_BANDS } = require("@ham2k/data/operation")
-const { parseCallsign } = require("@ham2k/data/callsigns")
-const { annotateFromCountryFile } = require("@ham2k/data/country-file")
+const { CONTEST_BANDS } = require("@ham2k/data-operation")
+const { parseCallsign } = require("@ham2k/data-callsigns")
+const { annotateFromCountryFile } = require("@ham2k/data-country-file")
 
 class BaseContestInfo {
   constructor(id, options) {
