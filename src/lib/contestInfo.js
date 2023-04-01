@@ -1,11 +1,13 @@
-const { default: autoBind } = require("auto-bind")
-const { MODES } = require("./consts")
-const { CONTEST_BANDS } = require("@ham2k/data/operation")
-const { parseCallsign } = require("@ham2k/data/callsigns")
-const { annotateFromCountryFile } = require("@ham2k/data/country-file")
+const autoBind = require('auto-bind-es5')
+const { MODES } = require('./consts')
+const { CONTEST_BANDS } = require('@ham2k/lib-operation-data')
+const { parseCallsign } = require('@ham2k/lib-callsigns')
+const { annotateFromCountryFile } = require('@ham2k/lib-country-files')
+
+// eslint no-throw-literal:0
 
 class BaseContestInfo {
-  constructor(id, options) {
+  constructor (id, options) {
     this.options = { ...this.baseOptions, ...options }
     this.options.category = this.options.category ?? {}
     this.options.near = this.options.near ?? new Date().toISOString()
@@ -16,62 +18,89 @@ class BaseContestInfo {
     autoBind(this)
   }
 
-  get sponsor() {
-    throw "Not implemented"
+  get sponsor () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get longSponsor() {
-    throw "Not implemented"
+
+  get longSponsor () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get homeUrl() {
-    throw "Not implemented"
+
+  get homeUrl () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get id() {
-    throw "Not implemented"
+
+  get id () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get name() {
-    throw "Not implemented"
+
+  get name () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get longName() {
-    throw "Not implemented"
+
+  get longName () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get modes() {
-    throw "Not implemented"
+
+  get modes () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get start() {
+
+  get start () {
     return this.periods && this.periods[0] && this.periods[0][0]
   }
-  get end() {
+
+  get end () {
     return this.periods && this.periods[this.periods.length - 1] && this.periods[this.periods.length - 1][1]
   }
-  get periods() {
-    throw "Not implemented"
+
+  get periods () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get maximumOperationInMinutes() {
-    throw "Not implemented"
+
+  get maximumOperationInMinutes () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get minimumBreakInMinutes() {
-    throw "Not implemented"
+
+  get minimumBreakInMinutes () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get baseOptions() {
+
+  get baseOptions () {
     return {}
   }
-  get bands() {
-    throw "Not implemented"
+
+  get bands () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get multipliers() {
-    throw "Not implemented"
+
+  get multipliers () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
-  get exchange() {
-    throw "Not implemented"
+
+  get exchange () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
 
   // Contest Scoring
-  get scoringResults() {
+  get scoringResults () {
     return this.scoring
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  score(qson, options = {}) {
+  score (qson, options = {}) {
     this.resetScoring()
     this.scoringScratchpad.isFrozen = Object.isFrozen(qson)
 
@@ -81,12 +110,12 @@ class BaseContestInfo {
     return this.scoring
   }
 
-  resetScoring() {
+  resetScoring () {
     this.scoring = { score: {}, uniqueIndex: {}, summary: {} }
     this.scoringScratchpad = {}
   }
 
-  prepareOneQSO(qso) {
+  prepareOneQSO (qso) {
     if (!qso?.our?.prefix) {
       if (!this.scoringScratchpad?.our?.prefix) {
         this.scoringScratchpad.our = { ...qso.our }
@@ -101,15 +130,17 @@ class BaseContestInfo {
     if (!qso?.their?.entityPrefix) annotateFromCountryFile(qso.their, this.countryFileOptions)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  scoringInfoForQSO(qso) {
-    throw "Not implemented"
-  }
-  calculateScoreTotal() {
-    throw "Not implemented"
+  scoringInfoForQSO (qso) {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
   }
 
-  processOneQSO(qso) {
+  calculateScoreTotal () {
+    // eslint-disable-next-line no-unused-expressions, no-throw-literal
+    throw 'Not implemented'
+  }
+
+  processOneQSO (qso) {
     if (!this.scoringScratchpad.isFrozen) this.prepareOneQSO(qso)
 
     let score, unique
@@ -120,13 +151,13 @@ class BaseContestInfo {
 
       if (unique?.qso) {
         if (score.points === undefined || score.points === null) {
-          console.log("Invalid QSO", qso)
-          this.addToSummary(qso, "invalid", 1)
+          console.log('Invalid QSO', qso)
+          this.addToSummary(qso, 'invalid', 1)
         } else if (this.scoring.uniqueIndex[unique.qso]) {
-          this.addToSummary(qso, "dupes", 1)
+          this.addToSummary(qso, 'dupes', 1)
         } else {
           this.scoring.uniqueIndex[unique.qso] = true
-          this.addToSummary(qso, "qsos", 1)
+          this.addToSummary(qso, 'qsos', 1)
 
           const keys = Object.keys(score)
           keys.forEach((key) => {
@@ -144,18 +175,18 @@ class BaseContestInfo {
         }
       }
     } else {
-      console.log("Invalid Callsign", qso?.their)
-      this.addToSummary(qso, "invalid", 1)
+      console.log('Invalid Callsign', qso?.their)
+      this.addToSummary(qso, 'invalid', 1)
     }
 
     const prevTotal = this.scoring.total
     this.scoring.total = this.calculateScoreTotal()
-    this.addToSummary(qso, "total", this.scoring.total - prevTotal)
+    this.addToSummary(qso, 'total', this.scoring.total - prevTotal)
 
     return this.scoring
   }
 
-  addToSummary(qso, key, add) {
+  addToSummary (qso, key, add) {
     this.scoring.summary[key] = this.scoring.summary[key] ?? {}
     this.scoring.summary[key].all = (this.scoring.summary[key].all ?? 0) + add
     this.scoring.summary[key][`${qso.band}`] = (this.scoring.summary[key][`${qso.band}`] ?? 0) + add
@@ -166,58 +197,70 @@ class BaseContestInfo {
 }
 
 class GenericContestInfo extends BaseContestInfo {
-  get sponsor() {
-    return this.options.sponsor ?? ""
-  }
-  get longSponsor() {
-    return this.options.longSponsor ?? this.sponsor
-  }
-  get homeUrl() {
-    return this.options.homeUrl
-  }
-  get name() {
-    return this.options.name ?? `${this.id}`
-  }
-  get longName() {
-    return this.options.longName ?? `${this.id} (Generic)`
-  }
-  get id() {
-    return this.options.id ?? "CONTEST"
-  }
-  get bands() {
-    return this.options.bands ?? CONTEST_BANDS
-  }
-  get modes() {
-    return this.options.modes ?? [MODES.Mixed]
-  }
-  get periods() {
-    return this.options.periods ?? []
-  }
-  get maximumOperationInMinutes() {
-    return this.options.maximumOperationInMinutes ?? 48 * 60
-  }
-  get minimumBreakInMinutes() {
-    return this.options.minimumBreakInMinutes ?? 0
-  }
-  get multipliers() {
-    return this.options.multipliers ?? []
-  }
-  get exchange() {
-    return this.options.exchange ?? ["exchange"]
+  get sponsor () {
+    return this.options.sponsor ?? ''
   }
 
-  scoringInfoForQSO(qso) {
+  get longSponsor () {
+    return this.options.longSponsor ?? this.sponsor
+  }
+
+  get homeUrl () {
+    return this.options.homeUrl
+  }
+
+  get name () {
+    return this.options.name ?? `${this.id}`
+  }
+
+  get longName () {
+    return this.options.longName ?? `${this.id} (Generic)`
+  }
+
+  get id () {
+    return this.options.id ?? 'CONTEST'
+  }
+
+  get bands () {
+    return this.options.bands ?? CONTEST_BANDS
+  }
+
+  get modes () {
+    return this.options.modes ?? [MODES.Mixed]
+  }
+
+  get periods () {
+    return this.options.periods ?? []
+  }
+
+  get maximumOperationInMinutes () {
+    return this.options.maximumOperationInMinutes ?? 48 * 60
+  }
+
+  get minimumBreakInMinutes () {
+    return this.options.minimumBreakInMinutes ?? 0
+  }
+
+  get multipliers () {
+    return this.options.multipliers ?? []
+  }
+
+  get exchange () {
+    return this.options.exchange ?? ['exchange']
+  }
+
+  scoringInfoForQSO (qso) {
     // Default contest behavior: one point per QSO, no mults, once per call per band.
 
     return { qsos: 1, points: 1, unique: { qsos: `call-${qso.their.call}-${qso.band}-${qso.mode}` } }
   }
 
-  calculateScoreTotal() {
+  calculateScoreTotal () {
     return this.scoring.score.points
   }
 }
 
 module.exports = {
   BaseContestInfo,
-  GenericContestInfo,
+  GenericContestInfo
 }

@@ -1,8 +1,27 @@
 {
-  "name": "@ham2k/data/contests",
+  "name": "@ham2k/lib-contests",
   "version": "0.0.1",
   "type": "commonjs",
   "dependencies": {
-    "auto-bind": "^5.0.1"
+    "@ham2k/lib-callsigns": "~0.0.1",
+    "@ham2k/lib-country-files": "~0.0.1",
+    "@ham2k/lib-operation-data": "~0.0.1",
+    "auto-bind-es5": "^1.1.0",
+    "luxon": "^3.3.0"
+  },
+  "devDependencies": {
+    "jest": "~29.5.0",
+    "standard": "~17.0.0"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }

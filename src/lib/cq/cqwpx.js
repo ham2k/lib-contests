@@ -1,38 +1,45 @@
-const { MODES, OPERATORS } = require("../consts")
-const { BaseContestInfo } = require("../contestInfo")
-const { roundDateToMonth, MONTHS, lastFullWeekendInMonth, secondFullWeekendInMonth } = require("../utils/dateCalc")
+const { MODES, OPERATORS } = require('../consts')
+const { BaseContestInfo } = require('../contestInfo')
+const { roundDateToMonth, MONTHS, lastFullWeekendInMonth, secondFullWeekendInMonth } = require('../utils/dateCalc')
 
 class CQWPXContestInfo extends BaseContestInfo {
-  get sponsor() {
-    return "CQ"
+  get sponsor () {
+    return 'CQ'
   }
-  get longSponsor() {
-    return "CQ Magazine"
+
+  get longSponsor () {
+    return 'CQ Magazine'
   }
-  get homeUrl() {
-    return "https://cqwpx.com/"
+
+  get homeUrl () {
+    return 'https://cqwpx.com/'
   }
-  get maximumOperationInMinutes() {
-    if (this.options.category.operators == OPERATORS.One) {
+
+  get maximumOperationInMinutes () {
+    if (this.options.category.operators === OPERATORS.One) {
       return 36 * 60
     } else {
       return 48 * 60
     }
   }
-  get minimumBreakInMinutes() {
+
+  get minimumBreakInMinutes () {
     return 60
   }
-  get bands() {
-    return ["160m", "80m", "40m", "20m", "15m", "10m"]
-  }
-  get multipliers() {
-    return ["prefixes"]
-  }
-  get exchange() {
-    return ["serial"]
+
+  get bands () {
+    return ['160m', '80m', '40m', '20m', '15m', '10m']
   }
 
-  scoringInfoForQSO(qso) {
+  get multipliers () {
+    return ['prefixes']
+  }
+
+  get exchange () {
+    return ['serial']
+  }
+
+  scoringInfoForQSO (qso) {
     // Please note that the RTTY has slightly diferent scoring, in case you modify this method.
 
     const info = { unique: {}, score: {} }
@@ -42,15 +49,15 @@ class CQWPXContestInfo extends BaseContestInfo {
 
     if (qso.their.entityPrefix === qso.our.entityPrefix) {
       // V-B-3. Contacts between stations in the same country are worth 1 point regardless of band.
-      if (qso.band === "160m" || qso.band === "80m" || qso.band === "40m") {
-        info.score.points = qso.mode == MODES.RTTY ? 2 : 1
+      if (qso.band === '160m' || qso.band === '80m' || qso.band === '40m') {
+        info.score.points = qso.mode === MODES.RTTY ? 2 : 1
       } else {
-        info.score.points = qso.mode == MODES.RTTY ? 1 : 1
+        info.score.points = qso.mode === MODES.RTTY ? 1 : 1
       }
-    } else if (qso.their.continent != qso.our.continent) {
+    } else if (qso.their.continent !== qso.our.continent) {
       // V-B-1. Contacts between stations on different continents are worth three (3) points on 28, 21,
       // and 14 MHz and six (6) points on 7, 3.5, and 1.8 MHz.
-      if (qso.band === "160m" || qso.band === "80m" || qso.band === "40m") {
+      if (qso.band === '160m' || qso.band === '80m' || qso.band === '40m') {
         info.score.points = 6
       } else {
         info.score.points = 3
@@ -62,10 +69,10 @@ class CQWPXContestInfo extends BaseContestInfo {
       // (both stations must be located in North America) are worth two (2) points on 28, 21, and 14 MHz
       // and four (4) points on 7, 3.5, and 1.8 MHz.
 
-      if (qso.band === "160m" || qso.band === "80m" || qso.band === "40m") {
-        info.score.points = qso.their.continent == "NA" || qso.mode == MODES.RTTY ? 4 : 2
+      if (qso.band === '160m' || qso.band === '80m' || qso.band === '40m') {
+        info.score.points = qso.their.continent === 'NA' || qso.mode === MODES.RTTY ? 4 : 2
       } else {
-        info.score.points = qso.their.continent == "NA" || qso.mode == MODES.RTTY ? 2 : 1
+        info.score.points = qso.their.continent === 'NA' || qso.mode === MODES.RTTY ? 2 : 1
       }
     }
 
@@ -77,7 +84,7 @@ class CQWPXContestInfo extends BaseContestInfo {
     return info
   }
 
-  calculateScoreTotal() {
+  calculateScoreTotal () {
     // V-A. Score: The final score is the result of the total QSO points //
     // multiplied by the number of different prefixes worked.
     return this.scoring.score.points * this.scoring.score.prefixes
@@ -85,19 +92,23 @@ class CQWPXContestInfo extends BaseContestInfo {
 }
 
 class CQWPXSSBContestInfo extends CQWPXContestInfo {
-  get id() {
-    return "CQ-WPX-SSB"
+  get id () {
+    return 'CQ-WPX-SSB'
   }
-  get name() {
-    return "CQ WPX SSB"
+
+  get name () {
+    return 'CQ WPX SSB'
   }
-  get longName() {
-    return "CQ WPX Contest - SSB"
+
+  get longName () {
+    return 'CQ WPX Contest - SSB'
   }
-  get modes() {
+
+  get modes () {
     return [MODES.SSB]
   }
-  get periods() {
+
+  get periods () {
     const date = roundDateToMonth(this.options.near, MONTHS.March)
     const period = lastFullWeekendInMonth(date)
     return [period.map((d) => d.toISO())]
@@ -105,19 +116,23 @@ class CQWPXSSBContestInfo extends CQWPXContestInfo {
 }
 
 class CQWPXCWContestInfo extends CQWPXContestInfo {
-  get id() {
-    return "CQ-WPX-CW"
+  get id () {
+    return 'CQ-WPX-CW'
   }
-  get name() {
-    return "CQ WPX CW"
+
+  get name () {
+    return 'CQ WPX CW'
   }
-  get longName() {
-    return "CQ WPX Contest - CW"
+
+  get longName () {
+    return 'CQ WPX Contest - CW'
   }
-  get modes() {
+
+  get modes () {
     return [MODES.CW]
   }
-  get periods() {
+
+  get periods () {
     const date = roundDateToMonth(this.options.near, MONTHS.May)
     const period = lastFullWeekendInMonth(date)
     return [period.map((d) => d.toISO())]
@@ -125,25 +140,31 @@ class CQWPXCWContestInfo extends CQWPXContestInfo {
 }
 
 class CQWPXRTTYContestInfo extends CQWPXContestInfo {
-  get homeUrl() {
-    return "https://cqwpxrtty.com/"
+  get homeUrl () {
+    return 'https://cqwpxrtty.com/'
   }
-  get id() {
-    return "CQ-WPX-RTTY"
+
+  get id () {
+    return 'CQ-WPX-RTTY'
   }
-  get name() {
-    return "CQ WPX RTTY"
+
+  get name () {
+    return 'CQ WPX RTTY'
   }
-  get longName() {
-    return "CQ WPX Contest - RTTY"
+
+  get longName () {
+    return 'CQ WPX Contest - RTTY'
   }
-  get bands() {
-    return ["80m", "40m", "20m", "15m", "10m"] // No 160m for RTTY
+
+  get bands () {
+    return ['80m', '40m', '20m', '15m', '10m'] // No 160m for RTTY
   }
-  get modes() {
+
+  get modes () {
     return [MODES.RTTY]
   }
-  get periods() {
+
+  get periods () {
     const date = roundDateToMonth(this.options.near, MONTHS.February)
     const period = secondFullWeekendInMonth(date)
     return [period.map((d) => d.toISO())]

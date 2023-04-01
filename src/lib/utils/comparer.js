@@ -1,7 +1,7 @@
-function isOrIncludes(a, b) {
-  if (typeof a === "string") {
-    if (a.indexOf(",") >= 0) {
-      return a.split(",").includes(b)
+function isOrIncludes (a, b) {
+  if (typeof a === 'string') {
+    if (a.indexOf(',') >= 0) {
+      return a.split(',').includes(b)
     } else {
       return a === b
     }
@@ -11,5 +11,5 @@ function isOrIncludes(a, b) {
 }
 
 module.exports = {
-  isOrIncludes,
+  isOrIncludes
 }

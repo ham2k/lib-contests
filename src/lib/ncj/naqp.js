@@ -1,52 +1,60 @@
-const { MODES, OPERATORS } = require("../consts")
-const { BaseContestInfo } = require("../contestInfo")
+const { MODES, OPERATORS } = require('../consts')
+const { BaseContestInfo } = require('../contestInfo')
 const {
   roundDateToMonth,
   MONTHS,
   firstFullWeekendInMonth,
+  secondFullWeekendInMonth,
   thirdFullWeekendInMonth,
   fourthFullWeekendInMonth,
-  lastSaturdayWeekendInMonth,
-} = require("../utils/dateCalc")
+  lastSaturdayWeekendInMonth
+} = require('../utils/dateCalc')
 
 class NAQPContestInfo extends BaseContestInfo {
-  get sponsor() {
-    return "NCJ"
+  get sponsor () {
+    return 'NCJ'
   }
-  get longSponsor() {
-    return "National Contest Journal"
+
+  get longSponsor () {
+    return 'National Contest Journal'
   }
-  get homeUrl() {
-    return "https://ncjweb.com/naqp/"
+
+  get homeUrl () {
+    return 'https://ncjweb.com/naqp/'
   }
-  get maximumOperationInMinutes() {
-    if (this.options.category.operators == OPERATORS.One) {
+
+  get maximumOperationInMinutes () {
+    if (this.options.category.operators === OPERATORS.One) {
       return 10 * 60
     } else {
       return 12 * 60
     }
   }
-  get minimumBreakInMinutes() {
+
+  get minimumBreakInMinutes () {
     return 30
   }
-  get bands() {
-    return ["160m", "80m", "40m", "20m", "15m", "10m"]
-  }
-  get multipliers() {
-    return ["multipliers"]
-  }
-  get exchange() {
-    return ["name", "location"]
+
+  get bands () {
+    return ['160m', '80m', '40m', '20m', '15m', '10m']
   }
 
-  scoringInfoForQSO(qso) {
+  get multipliers () {
+    return ['multipliers']
+  }
+
+  get exchange () {
+    return ['name', 'location']
+  }
+
+  scoringInfoForQSO (qso) {
     const info = { unique: {}, score: {} }
 
     info.unique.qso = `${qso.their.call}-${qso.band}`
 
     info.score.points = 1
 
-    if (qso.their.location.toUpperCase() !== "DX" || qso.their.continent === "NA") {
+    if (qso.their.location.toUpperCase() !== 'DX' || qso.their.continent === 'NA') {
       info.unique.multipliers = `${qso.their.location}-${qso.band}`
       info.score.multipliers = 1
     }
@@ -54,25 +62,29 @@ class NAQPContestInfo extends BaseContestInfo {
     return info
   }
 
-  calculateScoreTotal() {
+  calculateScoreTotal () {
     return this.scoring.score.points * this.scoring.score.multipliers
   }
 }
 
 class NAQPSSBContestInfo extends NAQPContestInfo {
-  get id() {
-    return "NAQP-SSB"
+  get id () {
+    return 'NAQP-SSB'
   }
-  get name() {
-    return "NAQP SSB"
+
+  get name () {
+    return 'NAQP SSB'
   }
-  get longName() {
-    return "North American QSO Party - SSB"
+
+  get longName () {
+    return 'North American QSO Party - SSB'
   }
-  get modes() {
+
+  get modes () {
     return [MODES.SSB]
   }
-  get periods() {
+
+  get periods () {
     const date = roundDateToMonth(this.options.near, [MONTHS.January, MONTHS.August])
     let period
     if (date.year === 2022) {
@@ -88,25 +100,29 @@ class NAQPSSBContestInfo extends NAQPContestInfo {
 }
 
 class NAQPCWContestInfo extends NAQPContestInfo {
-  get id() {
-    return "NAQP-CW"
+  get id () {
+    return 'NAQP-CW'
   }
-  get name() {
-    return "NAQP CW"
+
+  get name () {
+    return 'NAQP CW'
   }
-  get longName() {
-    return "North American QSO Party - CW"
+
+  get longName () {
+    return 'North American QSO Party - CW'
   }
-  get modes() {
+
+  get modes () {
     return [MODES.CW]
   }
-  get periods() {
+
+  get periods () {
     const date = roundDateToMonth(this.options.near, [MONTHS.January, MONTHS.August])
     let period
     if (date.year === 2022) {
-      period = date.month == MONTHS.January ? thirdFullWeekendInMonth(date) : firstFullWeekendInMonth(date)
+      period = date.month === MONTHS.January ? thirdFullWeekendInMonth(date) : firstFullWeekendInMonth(date)
     } else {
-      period = date.month == MONTHS.January ? secondFullWeekendInMonth(date) : firstFullWeekendInMonth(date)
+      period = date.month === MONTHS.January ? secondFullWeekendInMonth(date) : firstFullWeekendInMonth(date)
     }
     period[0] = period[0].set({ hour: 18 })
     period[1] = period[1].set({ hour: 5 })
@@ -116,25 +132,29 @@ class NAQPCWContestInfo extends NAQPContestInfo {
 }
 
 class NAQPRTTYContestInfo extends NAQPContestInfo {
-  get id() {
-    return "NAQP-RTTY"
+  get id () {
+    return 'NAQP-RTTY'
   }
-  get name() {
-    return "NAQP RTTY"
+
+  get name () {
+    return 'NAQP RTTY'
   }
-  get longName() {
-    return "North American QSO Party - RTTY"
+
+  get longName () {
+    return 'North American QSO Party - RTTY'
   }
-  get bands() {
-    return ["80m", "40m", "20m", "15m", "10m"] // No 160m for RTTY
+
+  get bands () {
+    return ['80m', '40m', '20m', '15m', '10m'] // No 160m for RTTY
   }
-  get modes() {
+
+  get modes () {
     return [MODES.RTTY]
   }
-  get periods() {
+
+  get periods () {
     const date = roundDateToMonth(this.options.near, [MONTHS.February, MONTHS.July])
-    let period
-    period = date.month == MONTHS.February ? lastSaturdayWeekendInMonth(date) : firstFullWeekendInMonth(date)
+    const period = date.month === MONTHS.February ? lastSaturdayWeekendInMonth(date) : firstFullWeekendInMonth(date)
     period[0] = period[0].set({ hour: 18 })
     period[1] = period[1].set({ hour: 5 })
 

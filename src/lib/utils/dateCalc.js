@@ -1,4 +1,4 @@
-const { DateTime } = require("luxon")
+const { DateTime } = require('luxon')
 
 const MONTHS = {
   January: 1,
@@ -12,7 +12,7 @@ const MONTHS = {
   September: 9,
   October: 10,
   November: 11,
-  December: 12,
+  December: 12
 }
 
 const WEEKDAYS = {
@@ -22,16 +22,16 @@ const WEEKDAYS = {
   Thursday: 4,
   Friday: 5,
   Saturday: 6,
-  Sunday: 7,
+  Sunday: 7
 }
 
-function nthFullWeekendInMonth(dt, n) {
-  if (typeof dt === "string") dt = DateTime.fromISO(dt, { zone: "UTC" })
+function nthFullWeekendInMonth (dt, n) {
+  if (typeof dt === 'string') dt = DateTime.fromISO(dt, { zone: 'UTC' })
 
-  const firstDayInMonth = dt.startOf("month")
+  const firstDayInMonth = dt.startOf('month')
 
-  let start = firstDayInMonth.plus({ days: ((7 + 6 - firstDayInMonth.weekday) % 7) + (n - 1) * 7 })
-  let end = start.plus({ days: 1 }).endOf("day")
+  const start = firstDayInMonth.plus({ days: ((7 + 6 - firstDayInMonth.weekday) % 7) + (n - 1) * 7 })
+  const end = start.plus({ days: 1 }).endOf('day')
 
   return [start, end]
 }
@@ -41,30 +41,30 @@ const secondFullWeekendInMonth = (dt) => nthFullWeekendInMonth(dt, 2)
 const thirdFullWeekendInMonth = (dt) => nthFullWeekendInMonth(dt, 3)
 const fourthFullWeekendInMonth = (dt) => nthFullWeekendInMonth(dt, 4)
 
-function lastFullWeekendInMonth(dt) {
-  if (typeof dt === "string") dt = DateTime.fromISO(dt, { zone: "UTC" })
+function lastFullWeekendInMonth (dt) {
+  if (typeof dt === 'string') dt = DateTime.fromISO(dt, { zone: 'UTC' })
 
-  const lastDayInMonth = dt.endOf("month")
+  const lastDayInMonth = dt.endOf('month')
 
-  let end = lastDayInMonth.minus({ days: (7 + lastDayInMonth.weekday) % 7 })
-  let start = end.minus({ days: 1 }).startOf("day")
-
-  return [start, end]
-}
-
-function lastSaturdayWeekendInMonth(dt) {
-  if (typeof dt === "string") dt = DateTime.fromISO(dt, { zone: "UTC" })
-
-  const lastDayInMonth = dt.endOf("month")
-
-  let start = lastDayInMonth.minus({ days: (7 + lastDayInMonth.weekday + 1) % 7 }).startOf("day")
-  let end = start.plus({ days: 1 }).endOf("day")
+  const end = lastDayInMonth.minus({ days: (7 + lastDayInMonth.weekday) % 7 })
+  const start = end.minus({ days: 1 }).startOf('day')
 
   return [start, end]
 }
 
-function roundDateToMonth(dt, month) {
-  if (typeof dt === "string") dt = DateTime.fromISO(dt, { zone: "UTC" })
+function lastSaturdayWeekendInMonth (dt) {
+  if (typeof dt === 'string') dt = DateTime.fromISO(dt, { zone: 'UTC' })
+
+  const lastDayInMonth = dt.endOf('month')
+
+  const start = lastDayInMonth.minus({ days: (7 + lastDayInMonth.weekday + 1) % 7 }).startOf('day')
+  const end = start.plus({ days: 1 }).endOf('day')
+
+  return [start, end]
+}
+
+function roundDateToMonth (dt, month) {
+  if (typeof dt === 'string') dt = DateTime.fromISO(dt, { zone: 'UTC' })
 
   let months = []
   if (month instanceof Array) {
@@ -80,7 +80,7 @@ function roundDateToMonth(dt, month) {
     dates.push(dt.set({ month: m, year: dt.year - 1 }))
   })
 
-  return dates.sort((a, b) => Math.abs(dt.diff(a, "days").days) - Math.abs(dt.diff(b, "days").days))[0]
+  return dates.sort((a, b) => Math.abs(dt.diff(a, 'days').days) - Math.abs(dt.diff(b, 'days').days))[0]
 }
 
 module.exports = {
@@ -93,5 +93,5 @@ module.exports = {
   fourthFullWeekendInMonth,
   lastFullWeekendInMonth,
   lastSaturdayWeekendInMonth,
-  roundDateToMonth,
+  roundDateToMonth
 }

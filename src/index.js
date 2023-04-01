@@ -1,5 +1,5 @@
-const { findContestInfoForId } = require("./lib/contests")
+const { findContestInfoForId } = require('./lib/contests')
 
 module.exports = {
-  findContestInfoForId,
+  findContestInfoForId
 }
